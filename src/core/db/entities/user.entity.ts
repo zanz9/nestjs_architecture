@@ -8,6 +8,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @ApiProperty()
   @Column()
   password: string;
 }

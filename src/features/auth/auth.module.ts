@@ -7,9 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ENV_KEYS } from '@/core/config/env_keys';
 import { RedisService } from '@liaoliaots/nestjs-redis';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies';
 @Module({
   imports: [
-    UserModule,
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -17,9 +19,10 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
         secret: configService.get<string>(ENV_KEYS.JWT_SECRET),
       }),
     }),
+    UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, TokenService],
+  providers: [AuthService, TokenService, JwtStrategy],
   exports: [AuthService, TokenService],
 })
 export class AuthModule {}

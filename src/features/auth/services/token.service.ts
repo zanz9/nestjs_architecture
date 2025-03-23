@@ -12,7 +12,7 @@ import { UserEntity } from '@/core/db/entities/user.entity';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { ENV_KEYS } from '@/core/config/env_keys';
 import { UserService } from '@/features/user/services/user.service';
-import { PayloadUser } from '@/core/decorators/session-account.decorator';
+import { PayloadUser } from '@/core/decorators/session_account.decorator';
 @Injectable()
 export class TokenService {
   constructor(

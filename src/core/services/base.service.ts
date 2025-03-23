@@ -1,98 +1,67 @@
-import { Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import {
   Between,
   DeepPartial,
-  FindOptionsOrder,
-  FindOptionsSelect,
-  FindOptionsSelectByString,
   FindOptionsWhere,
   ILike,
-  IsNull,
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
 } from 'typeorm';
 import { BaseEntity } from '@/core/services/base.entity';
-import { ApiProperty } from '@nestjs/swagger';
-
-export type TPaginationOptions = {
-  page: number;
-  pageSize: number;
-};
-export type TSearchOptions<T> = FindOptionsWhere<T> | FindOptionsWhere<T>[];
-export type TFilterOptions<T> =
-  | FindOptionsSelect<T>
-  | FindOptionsSelectByString<T>;
-export type TSortOptions<T> = FindOptionsOrder<T>;
-export type TRelationsOptions = string;
-
-export type TEntityOptions<T> = {
-  search?: TSearchOptions<T>;
-  filter?: TFilterOptions<T>;
-  relations?: string;
-};
-
-export class TEntityListOptions<T> {
-  pagination?: TPaginationOptions;
-  sort?: TSortOptions<T>;
-  search?: TSearchOptions<T>;
-  filter?: TFilterOptions<T>;
-  relations?: string;
-}
+import {
+  TEntityListOptions,
+  TEntityOptions,
+  TSearchOptions,
+} from '../types/requests';
 
 export abstract class BaseService<Entity extends BaseEntity> {
   private readonly logger = new Logger(BaseService.name);
 
   constructor(protected repository: Repository<Entity>) {}
 
-  async createOne(
-    createDto: DeepPartial<Entity>,
-    options?: TEntityOptions<Entity>,
-  ) {
+  async createOne(createDto: DeepPartial<Entity>) {
     try {
       const createdRecord = this.repository.create(createDto);
-      const savedRecord = await this.repository.save(createdRecord);
-
-      return this.findOne(savedRecord.id, options);
+      return await this.repository.save(createdRecord);
     } catch (error) {
-      this.logger.error(error);
+      throw new BadRequestException('Error creating record');
     }
   }
 
-  async updateOne(
-    id: number,
-    updateDto: DeepPartial<Entity>,
-    options?: TEntityOptions<Entity>,
-  ) {
+  async updateOne(id: number, updateDto: DeepPartial<Entity>) {
+    const existRecord = await this.findOne(id);
+    if (!existRecord) throw new NotFoundException('Record not found');
     try {
-      const existRecord = await this.findOne(id, options);
-      if (!existRecord) {
-        throw new NotFoundException('Record not found');
-      }
-
       const mergedRecord = this.repository.merge(existRecord, updateDto);
-      const updatedRecord = await this.repository.save(mergedRecord);
-
-      return this.findOne(updatedRecord.id, options);
+      return await this.repository.save(mergedRecord);
     } catch (error) {
-      this.logger.error(error);
+      throw new BadRequestException('Error updating record');
     }
   }
 
-  async deleteOne(id: number, options?: TEntityOptions<Entity>) {
+  async deleteOne(id: number) {
+    const existRecord = await this.findOne(id);
+    if (!existRecord) throw new NotFoundException('Record not found');
     try {
-      const existRecord = await this.findOne(id, options);
-      if (!existRecord) {
-        throw new NotFoundException('Record not found');
-      }
-
-      return this.repository.remove(existRecord);
+      const mergedRecord = this.repository.merge(existRecord, {
+        deletedAt: new Date(),
+      } as any);
+      return await this.repository.save(mergedRecord);
     } catch (error) {
-      this.logger.error(error);
+      throw new BadRequestException('Error deleting record');
     }
+    // try {
+    // const existRecord = await this.findOne(id, options);
+    // if (!existRecord) throw new NotFoundException('Record not found');
+    // return this.repository.remove(existRecord);
+    // } catch (error) {
+    //   this.logger.error(error);
+    //   throw new BadRequestException('Error deleting record');
+    // }
   }
 
-  async findOne(id: number, options?: TEntityListOptions<Entity>) {
+  async findOne(id: number, options?: TEntityOptions<Entity>) {
     const relationsArray = options?.relations
       ? options.relations.split(',')
       : [];
@@ -100,19 +69,21 @@ export abstract class BaseService<Entity extends BaseEntity> {
       where: { ...options?.search, id } as any,
       select: options?.filter,
       relations: relationsArray,
-      order: options?.sort,
     });
   }
 
   async findAll(options?: TEntityListOptions<Entity>) {
     const page = options?.pagination?.page || 1;
-    const pageSize = options?.pagination?.pageSize || 10;
+    const size = options?.pagination?.pageSize || 10;
 
     const relationsArray = options?.relations
       ? options.relations.split(',')
       : [];
     const resultWhere = await this.getWhere(options?.search ?? {});
-    const resultSkip = (page - 1) * pageSize;
+    const resultSkip = (page - 1) * size;
+
+    console.log(options);
+    console.log(options?.pagination?.pageSize);
 
     const [result, total] = await this.repository.findAndCount({
       where: resultWhere,
@@ -120,38 +91,12 @@ export abstract class BaseService<Entity extends BaseEntity> {
       relations: relationsArray,
       order: options?.sort,
       skip: resultSkip,
-      take: pageSize,
+      take: size,
     });
 
     return {
       records: result,
-      meta: this.createPaginationMetaData(total, page, pageSize),
-    };
-  }
-
-  async findAllPaginated(options?: TEntityListOptions<Entity>) {
-    const resultWhere = await this.getWhere(options?.search ?? {});
-
-    const page = options?.pagination?.page ?? 1;
-    const pageSize = options?.pagination?.pageSize ?? 10;
-
-    const resultSkip = (page - 1) * pageSize;
-    const relationsArray = options?.relations
-      ? options.relations.split(',')
-      : [];
-
-    const [result, total] = await this.repository.findAndCount({
-      relations: relationsArray,
-      where: resultWhere,
-      select: options?.filter,
-      order: options?.sort,
-      skip: resultSkip,
-      take: pageSize,
-    });
-
-    return {
-      records: result,
-      meta: this.createPaginationMetaData(total, page, pageSize),
+      meta: this.createPaginationMetaData(total, page, size),
     };
   }
 
@@ -189,11 +134,11 @@ export abstract class BaseService<Entity extends BaseEntity> {
   }
 
   public createPaginationMetaData(total: number, page: number, limit: number) {
-    const totalPages = Math.ceil(total / limit);
+    const pageCount = Math.ceil(total / limit);
 
     return {
       total,
-      totalPages,
+      pageCount,
       page: +page,
     };
   }

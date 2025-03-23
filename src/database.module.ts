@@ -24,12 +24,10 @@ import { ENV_KEYS } from './core/config/env_keys';
             __dirname + '/src/core/db/subscribers/*.subscriber{.ts,.js}',
           ],
           synchronize: false,
-          // migrationsRun: ,jhb
           autoLoadEntities: true,
           logging: false,
           migrations: [__dirname + '/src/core/db/migrations/*{.ts,.js}'],
           ssl: configService.get('DB_SSl', false),
-          // logging: isDevelopment,
         };
       },
     }),
