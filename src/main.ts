@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ENV_KEYS } from './core/config/env_keys';
 import { setupSwaggerConfig } from './core/config/swagger.config';
 import * as cookieParser from 'cookie-parser';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

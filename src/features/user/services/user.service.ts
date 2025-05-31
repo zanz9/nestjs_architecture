@@ -15,6 +15,6 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   async findOneByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email } });
+    return this.findOneBy({ email });
   }
 }

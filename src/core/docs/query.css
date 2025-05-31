@@ -1,0 +1,143 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 40px;
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+  color: #222;
+}
+
+h1 {
+  color: #2563eb;
+  margin-bottom: 0.5em;
+}
+
+h2 {
+  color: #1e293b;
+  margin-top: 2em;
+  border-bottom: 2px solid #2563eb33;
+  padding-bottom: 0.2em;
+}
+
+ul {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 1em 2em;
+  margin-bottom: 2em;
+  box-shadow: 0 2px 8px #2563eb11;
+}
+
+ul li {
+  margin-bottom: 0.5em;
+  font-size: 1.08em;
+}
+
+code,
+pre {
+  background: #e0e7ef;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 1.05em;
+  color: #0f172a;
+}
+
+pre {
+  display: block;
+  margin: 1em 0;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 8px #2563eb11;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+  border-bottom: 1px dashed #2563eb77;
+  transition: border 0.2s;
+}
+
+a:hover {
+  border-bottom: 2px solid #2563eb;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2em;
+  background: #f8fafc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #2563eb11;
+}
+
+.doc-table th,
+.doc-table td {
+  padding: 0.7em 1em;
+  border-bottom: 1px solid #e0e7ef;
+  text-align: left;
+}
+
+.doc-table th {
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.doc-example {
+  background: #f1f5f9;
+  border-left: 5px solid #2563eb;
+  border-radius: 8px;
+  margin-bottom: 1.5em;
+  padding: 1em 1.5em;
+  box-shadow: 0 2px 8px #2563eb11;
+}
+
+.doc-example-title {
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 0.3em;
+}
+
+.doc-example-desc {
+  color: #334155;
+  margin-top: 0.3em;
+  font-size: 1.04em;
+}
+
+.info-block {
+  margin-top: 2em;
+  background: #e0f2fe;
+  border-left: 6px solid #2563eb;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  display: flex;
+  align-items: center;
+  font-size: 1.08em;
+  box-shadow: 0 2px 8px #2563eb11;
+}
+
+.info-icon {
+  font-size: 1.6em;
+  margin-right: 0.7em;
+}
+
+.doc-table td code {
+  word-break: break-all;
+  white-space: pre-line;
+}
+
+.doc-table td {
+  word-break: break-word;
+  white-space: pre-line;
+}
+
+@media (max-width: 600px) {
+  body {
+    margin: 10px;
+  }
+
+  ul {
+    padding: 0.5em 1em;
+  }
+}

@@ -12,6 +12,7 @@ import { LoginDto } from '../dto/login.dto';
 import { TokenService } from './token.service';
 import { ENV_KEYS } from '@/core/config/env_keys';
 import { ConfigService } from '@nestjs/config';
+import { UserEntity } from '@/core/db/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -59,5 +60,12 @@ export class AuthService {
       String(password),
       Number(this.configService.getOrThrow<number>(ENV_KEYS.PASSWORD_HASH)),
     );
+  }
+
+  async generateTokensByUserId(userId: number) {
+    const user = await this.userService.findOne(userId);
+    if (!user) throw new NotFoundException('User not found');
+    const tokens = await this.tokenService.createTokens(user);
+    return tokens;
   }
 }

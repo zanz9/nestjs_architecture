@@ -1,37 +1,17 @@
-import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { UserEntity } from '@/core/db/entities/user.entity';
+import { CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamp with time zone',
     nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => "CURRENT_TIMESTAMP AT TIME ZONE 'UTC' AT TIME ZONE '+5'", // set your timezone
   })
+  @ApiProperty()
   createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', nullable: true })
-  updatedAt?: Date | null;
-
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deletedAt?: Date | null;
-
-  // @ManyToOne('UserEntity', { nullable: true })
-  // @JoinColumn()
-  // createdBy?: UserEntity | null;
-
-  // @ManyToOne('UserEntity', { nullable: true })
-  // @JoinColumn()
-  // updatedBy?: UserEntity | null;
 }

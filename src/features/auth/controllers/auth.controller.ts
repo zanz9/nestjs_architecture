@@ -15,9 +15,10 @@ import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterDto } from '../dto/register.dto';
 import { AuthService } from '../services/auth.service';
 import { UserEntity } from '@/core/db/entities/user.entity';
-import { LoginDto, LoginResponseDto } from '../dto/login.dto';
+import { LoginDto } from '../dto/login.dto';
+import { AuthResultDto } from '../dto/auth_result.dto';
 
-@ApiTags('auth')
+@ApiTags('Авторизация')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -34,7 +35,7 @@ export class AuthController {
 
   @ApiBody({ type: LoginDto })
   @ApiResponse({
-    type: LoginResponseDto,
+    type: AuthResultDto,
   })
   @Post('login')
   async login(@Body() loginDto: LoginDto) {

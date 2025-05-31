@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Документация по параметрам relations, exclude, pagination, filter, sort, search</title>
+  <link rel="stylesheet" href="/docs/query.css">
+</head>
+
+<body>
+  <h1>Документация по параметрам <code>relations</code>, <code>exclude</code>, <code>page</code>, <code>pageSize</code>,
+    <code>filter</code>, <code>sort</code>, <code>search</code>
+  </h1>
+  <p>Параметры позволяют гибко управлять связями, исключением полей, пагинацией, выборкой полей, сортировкой и поиском в
+    ответе API. Ниже приведены примеры использования и ожидаемые результаты:</p>
+
+  <h2>Связи (relations)</h2>
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Пример запроса</th>
+        <th>Результат</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/products?relations=category</code></td>
+        <td>В ответе будет вложенный объект <b>category</b></td>
+      </tr>
+      <tr>
+        <td><code>/products?relations=category,shop</code></td>
+        <td>В ответе будут вложенные объекты <b>category</b> и <b>shop</b></td>
+      </tr>
+      <tr>
+        <td><code>/products?relations=["category","shop"]</code></td>
+        <td>То же самое, но как массив</td>
+      </tr>
+      <tr>
+        <td><code>/products?relations=category.parent,shop.owner</code></td>
+        <td>В ответе будут вложенные объекты <b>category</b> и <b>shop</b>, а также их вложенные объекты <b>parent</b> и
+          <b>owner</b> соответственно. Можно указывать связи на несколько уровней через точку.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Исключение полей (exclude)</h2>
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Пример запроса</th>
+        <th>Результат</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/products?exclude=description</code></td>
+        <td>В ответе не будет поля <b>description</b></td>
+      </tr>
+      <tr>
+        <td><code>/products?exclude=category,shop</code></td>
+        <td>В ответе не будет полей <b>category</b> и <b>shop</b></td>
+      </tr>
+      <tr>
+        <td><code>/products?exclude=category.name</code></td>
+        <td>В ответе не будет поля <b>name</b> внутри <b>category</b></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Пагинация (page, pageSize)</h2>
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Пример запроса</th>
+        <th>Результат</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/products?page=2&pageSize=5</code></td>
+        <td>В ответе только 5 записей, начиная с 6-й, и meta с информацией о страницах</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Сортировка (sort)</h2>
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Пример запроса</th>
+        <th>Результат</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>/products?sort={"price":"ASC"}</code></td>
+        <td>Сортировка по цене по возрастанию</td>
+      </tr>
+      <tr>
+        <td><code>/products?sort={"name":"DESC","price":"ASC"}</code></td>
+        <td>Сортировка сначала по имени по убыванию, затем по цене по возрастанию</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Поиск (search)</h2>
+  <table class="doc-table">
+    <thead>
+      <tr>
+        <th>Оператор</th>
+        <th>Пример запроса</th>
+        <th>Результат</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>AND</b> (по умолчанию)</td>
+        <td><code>/products?search={"category":"Молочные","inStock":true}</code></td>
+        <td>Товары из категории "Молочные" и в наличии</td>
+      </tr>
+      <tr>
+        <td><b>OR</b></td>
+        <td><code>/products?search={"or":[{"id":1},{"id":2}]}</code></td>
+        <td>Товары с id 1 <b>или</b> 2</td>
+      </tr>
+      <tr>
+        <td><b>LIKE</b></td>
+        <td><code>/products?search={"name":{"like":"сыр"}}</code></td>
+        <td>Товары, в названии которых есть "сыр"</td>
+      </tr>
+      <tr>
+        <td><b>IN</b></td>
+        <td><code>/products?search={"id":{"in":[1,2,3]}}</code></td>
+        <td>Товары с id 1, 2 или 3</td>
+      </tr>
+      <tr>
+        <td><b>BETWEEN</b></td>
+        <td><code>/products?search={"price":{"from":100,"to":200}}</code></td>
+        <td>Товары с ценой от 100 до 200</td>
+      </tr>
+      <tr>
+        <td><b>NULL/NOT NULL</b></td>
+        <td><code>/products?search={"photoId":{"isNull":true}}</code></td>
+        <td>Товары без фото</td>
+      </tr>
+      <tr>
+        <td><b>Сравнения</b> (gt, lt, gte, lte)</td>
+        <td><code>/products?search={"price":{"gt":100}}</code></td>
+        <td>Товары с ценой больше 100</td>
+      </tr>
+      <tr>
+        <td><b>STARTSWITH</b></td>
+        <td><code>/products?search={"name":{"startsWith":"мо"}}</code></td>
+        <td>Товары, название которых начинается на "мо"</td>
+      </tr>
+      <tr>
+        <td><b>ENDSWITH</b></td>
+        <td><code>/products?search={"name":{"endsWith":"ко"}}</code></td>
+        <td>Товары, название которых заканчивается на "ко"</td>
+      </tr>
+      <tr>
+        <td><b>NOT</b></td>
+        <td><code>/products?search={"not":{"inStock":true}}</code></td>
+        <td>Товары, которых <b>нет</b> в наличии</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Сложные вложенные условия</h3>
+  <div class="doc-example">
+    <div class="doc-example-title">Пример 1: AND + OR</div>
+    <pre>/products?search={"and":[{"name":{"like":"сыр"}},{"or":[{"price":{"lt":200}},{"inStock":false}]}]}</pre>
+    <div class="doc-example-desc">Найдёт товары, в названии которых есть "сыр" <b>и</b> (цена меньше 200 <b>или</b> нет
+      в наличии).</div>
+  </div>
+  <div class="doc-example">
+    <div class="doc-example-title">Пример 2: OR + BETWEEN</div>
+    <pre>/products?search={"or":[{"price":{"from":100,"to":200}},{"category":"Сыры"}]}</pre>
+    <div class="doc-example-desc">Найдёт товары с ценой от 100 до 200 <b>или</b> из категории "Сыры".</div>
+  </div>
+  <div class="doc-example">
+    <div class="doc-example-title">Пример 3: NOT + LIKE</div>
+    <pre>/products?search={"not":{"name":{"like":"сыр"}}}</pre>
+    <div class="doc-example-desc">Найдёт товары, в названии которых <b>нет</b> слова "сыр".</div>
+  </div>
+
+  <div class="info-block">
+    <span class="info-icon">💡</span>
+    <span>Если у вас есть вопросы по связям, исключению полей, пагинации, фильтрации, сортировке или поиску — обратитесь
+      к backend-команде!</span>
+  </div>
+</body>
+
+</html>

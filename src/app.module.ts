@@ -5,6 +5,7 @@ import { AuthModule } from './features/auth/auth.module';
 import { UserModule } from './features/user/user.module';
 import { DatabaseModule } from './database.module';
 import { PassportModule } from '@nestjs/passport';
+import { DocsController } from './core/controllers/docs.controller';
 
 @Module({
   imports: [
@@ -17,5 +18,6 @@ import { PassportModule } from '@nestjs/passport';
     AuthModule,
     UserModule,
   ],
+  controllers: [DocsController],
 })
 export class AppModule {}

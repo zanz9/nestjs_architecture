@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# IMPORTANT:
+
+# Always read docs.md before writing any code.
+
+# After adding a major feature or completing a milestone, update docs.md.
+
+# Document the entire database schema in docs.md.
+
+# For new migrations, make sure to add them to the same file.

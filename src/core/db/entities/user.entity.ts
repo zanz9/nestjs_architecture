@@ -1,6 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '@/core/services/base.entity';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { UserRoles } from '../enum/user_roles.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -9,6 +11,11 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @ApiProperty()
+  @Exclude()
   @Column()
   password: string;
+
+  @ApiProperty()
+  @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
+  role: UserRoles;
 }

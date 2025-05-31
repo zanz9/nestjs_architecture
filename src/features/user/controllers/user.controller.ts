@@ -9,7 +9,13 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { UserEntity } from '@/core/db/entities/user.entity';
 import { UserDto } from '../dto/user.dto';
@@ -18,25 +24,25 @@ import {
   PayloadUser,
   SessionAccount,
 } from '@/core/decorators/session_account.decorator';
-import { ListQueryDto, QueryDto } from '@/core/dto/query.dto';
 import { TEntityListOptions } from '@/core/types/requests';
+import { PaginatedQueryDto } from '@/core/dto/query.dto';
 
-@ApiTags('user')
+@ApiTags('Пользователи')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async findAll(@Query() queryDto: ListQueryDto<UserEntity>) {
-    return this.userService.findAll(queryDto);
+  @ApiOperation({
+    summary: 'Получить список пользователей',
+  })
+  async findAll(@Query() queryDto: PaginatedQueryDto) {
+    return this.userService.findAll(queryDto as any);
   }
 
   @Get(':id')
-  async findOne(
-    @Query() queryDto: QueryDto<UserEntity>,
-    @Param('id') id: number,
-  ) {
-    return this.userService.findOne(id, queryDto);
+  async findOne(@Query() queryDto: PaginatedQueryDto, @Param('id') id: number) {
+    return this.userService.findOne(id, queryDto as any);
   }
 
   @ApiBody({ type: UserDto })
@@ -47,7 +53,6 @@ export class UserController {
     @SessionAccount() account: UserEntity,
     @Body() createDto: UserDto,
   ) {
-    console.log(account);
     return this.userService.createOne(createDto);
   }
 

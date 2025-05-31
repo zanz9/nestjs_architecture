@@ -67,14 +67,6 @@ export class TokenService {
     );
   }
 
-  async setRefreshTokenToWhiteListInfinite(refreshToken: string) {
-    return await this.setTokenToWhiteList(refreshToken, '999d');
-  }
-
-  async setAccessTokenToWhiteListInfinite(accessToken: string) {
-    return await this.setTokenToWhiteList(accessToken, '999d');
-  }
-
   async setTokenToWhiteList(token: string, expiration: string) {
     const key = `token:${token}`;
     return await this.redis?.set(
