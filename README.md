@@ -1,99 +1,310 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Architecture Project
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📖 Описание
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Это современное enterprise-приложение, построенное на NestJS framework с использованием TypeScript. Проект реализует чистую архитектуру с модульной структурой, включает систему аутентификации, управление пользователями и готовую инфраструктуру для развертывания.
 
-## Description
+## 🏗️ Архитектура
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Проект следует принципам **модульной архитектуры** и **чистого кода**:
 
-## Project setup
+### Структура проекта:
 
-```bash
-$ yarn install
+```
+src/
+├── core/                    # Ядро приложения
+│   ├── config/             # Конфигурации
+│   ├── controllers/        # Базовые контроллеры
+│   ├── db/                 # База данных
+│   │   ├── entities/       # TypeORM сущности
+│   │   ├── migrations/     # Миграции БД
+│   │   ├── seeds/          # Сиды для БД
+│   │   └── enum/           # Энумы для БД
+│   ├── decorators/         # Кастомные декораторы
+│   ├── docs/               # Swagger документация
+│   ├── dto/                # Data Transfer Objects
+│   ├── guards/             # Охранники (Guards)
+│   ├── helpers/            # Вспомогательные функции
+│   ├── interceptors/       # Перехватчики
+│   ├── services/           # Базовые сервисы
+│   ├── types/              # TypeScript типы
+│   └── utils/              # Утилиты
+├── features/               # Функциональные модули
+│   ├── auth/               # Модуль аутентификации
+│   │   ├── controllers/    # Контроллеры аутентификации
+│   │   ├── dto/            # DTO для аутентификации
+│   │   ├── services/       # Сервисы аутентификации
+│   │   ├── strategies/     # Passport стратегии
+│   │   └── auth.module.ts  # Модуль аутентификации
+│   └── user/               # Модуль пользователей
+│       ├── controllers/    # Контроллеры пользователей
+│       ├── dto/            # DTO для пользователей
+│       ├── services/       # Сервисы пользователей
+│       └── user.module.ts  # Модуль пользователей
+├── app.module.ts           # Корневой модуль
+├── database.module.ts      # Модуль базы данных
+├── redis.module.ts         # Модуль Redis
+└── main.ts                 # Точка входа
 ```
 
-## Compile and run the project
+### Основные принципы:
+
+- **SOLID принципы** - каждый класс имеет единственную ответственность
+- **Модульность** - каждый домен инкапсулирован в отдельный модуль
+- **Инверсия зависимостей** - использование dependency injection
+- **Чистая архитектура** - разделение бизнес-логики и инфраструктуры
+
+## 🚀 Технологический стек
+
+### Backend:
+
+- **NestJS** - прогрессивный Node.js фреймворк
+- **TypeScript** - типизированный JavaScript
+- **TypeORM** - ORM для работы с базой данных
+- **PostgreSQL** - реляционная база данных
+- **Redis** - кеширование и сессии
+- **JWT** - аутентификация
+- **Passport** - стратегии аутентификации
+- **bcryptjs** - хеширование паролей
+- **class-validator** - валидация данных
+- **Swagger** - документация API
+
+### DevOps:
+
+- **Docker** - контейнеризация
+- **Docker Compose** - оркестрация контейнеров
+- **MinIO** - S3-совместимое объектное хранилище
+
+### Тестирование:
+
+- **Jest** - фреймворк для тестирования
+- **Supertest** - тестирование HTTP запросов
+
+## 🛠️ Установка и настройка
+
+### Требования:
+
+- Node.js >= 18
+- PostgreSQL >= 13
+- Redis >= 6
+- Docker и Docker Compose (опционально)
+
+### 1. Клонирование репозитория:
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+git clone <repository-url>
+cd nestjs_architecture
 ```
 
-## Run tests
+### 2. Установка зависимостей:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn install
 ```
 
-## Deployment
+### 3. Настройка переменных окружения:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Создайте файлы конфигурации:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- `.env` - основные настройки приложения
+- `.env.db` - настройки базы данных
+- `.env.minio` - настройки MinIO
+
+### 4. Запуск с Docker:
 
 ```bash
-$ yarn install -g mau
-$ mau deploy
+docker-compose up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Запуск миграций:
 
-## Resources
+```bash
+yarn migration:run
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📝 Скрипты
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Основные команды:
 
-## Support
+#### Разработка:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Разработка с автоперезагрузкой
+yarn dev
 
-## Stay in touch
+# Обычный старт в dev режиме
+yarn start:dev
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Режим отладки
+yarn start:debug
+```
 
-## License
+#### Продакшн:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+# Сборка проекта
+yarn build
+
+# Запуск продакшн версии
+yarn start:prod
+```
+
+#### База данных:
+
+```bash
+# Запуск миграций
+yarn migration:run
+
+# Генерация новой миграции
+yarn migration:generate <MigrationName>
+
+# Удаление схемы БД
+yarn schema:drop
+
+# Полная пересборка БД (удаление + миграции)
+yarn migration:scratch
+```
+
+#### Тестирование:
+
+```bash
+# Запуск всех тестов
+yarn test
+
+# Тесты с отслеживанием изменений
+yarn test:watch
+
+# E2E тестирование
+yarn test:e2e
+
+# Покрытие кода тестами
+yarn test:cov
+
+# Отладка тестов
+yarn test:debug
+```
+
+#### Качество кода:
+
+```bash
+# Линтинг и автоисправление
+yarn lint
+
+# Форматирование кода
+yarn format
+```
+
+#### Документация:
+
+```bash
+# Генерация Swagger схемы
+yarn swagger:generate
+```
+
+### Стратегии:
+
+- JWT Strategy для защищенных роутов
+- Local Strategy для аутентификации по логину/паролю
+
+## 📚 API Документация
+
+API документация доступна через Swagger UI:
+
+- **Development**: `http://localhost:3000/docs`
+- **Swagger JSON**: `http://localhost:3000/docs-json`
+
+Документация автоматически генерируется из декораторов в коде.
+
+## 🐳 Docker
+
+### Сервисы:
+
+- **app** - основное NestJS приложение
+- **postgres** - база данных PostgreSQL
+- **redis** - сервер Redis для кеширования
+- **minio** - S3-совместимое объектное хранилище
+
+### Порты:
+
+- `3000` - NestJS приложение
+- `5432` - PostgreSQL
+- `6379` - Redis
+- `9000` - MinIO API
+- `9001` - MinIO Console
+
+## 🧪 Тестирование
+
+### Структура тестов:
+
+- **Unit тесты** - тестирование отдельных компонентов
+- **E2E тесты** - тестирование всего API
+- **Coverage** - отчеты о покрытии кода
+
+### Соглашения:
+
+- Файлы тестов: `*.spec.ts`
+- E2E тесты: в папке `test/`
+- Arrange-Act-Assert pattern
+- Naming: `inputX`, `mockX`, `actualX`, `expectedX`
+
+## 🚀 Развертывание
+
+### Локальная разработка:
+
+```bash
+# С Docker
+docker-compose up -d
+
+# Без Docker
+yarn install
+yarn migration:run
+yarn dev
+```
+
+### Продакшн:
+
+```bash
+# Сборка
+yarn build
+
+# Запуск
+yarn start:prod
+```
+
+## 📋 Соглашения по коду
+
+### TypeScript:
+
+- Строгая типизация, избегание `any`
+- JSDoc для публичных методов
+- PascalCase для классов
+- camelCase для переменных и методов
+- snake_case для файлов и папок
+
+### NestJS:
+
+- Модульная архитектура
+- Один экспорт на файл
+- Dependency Injection
+- Guards для авторизации
+- Interceptors для обработки запросов
+- DTOs с валидацией
+
+### База данных:
+
+- TypeORM entities
+- Миграции для изменений схемы
+- Сиды для тестовых данных
+- Енумы для ограниченных значений
+
+## 🤝 Контрибьюция
+
+1. Форкните репозиторий
+2. Создайте feature ветку: `git checkout -b feature/amazing-feature`
+3. Зафиксируйте изменения: `git commit -m 'Add amazing feature'`
+4. Отправьте в ветку: `git push origin feature/amazing-feature`
+5. Создайте Pull Request
+
+## 📞 Поддержка
+
+При возникновении вопросов или проблем, пожалуйста, создайте issue в репозитории.
